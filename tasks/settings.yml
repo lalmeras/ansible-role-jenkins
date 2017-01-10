@@ -17,6 +17,19 @@
     line: 'JENKINS_HOME={{ jenkins_home }}'
   register: jenkins_home_config
 
+- name: Set the Jenkins user's home directory
+  user:
+    name: jenkins
+    home: "{{ jenkins_user_home }}"
+
+- name: Initiate the Jenkins user's home directory
+  file:
+    path: "{{ jenkins_user_home }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: u=rwx,g=rx,o=
+
 - name: Immediately restart Jenkins on init config changes.
   service: name=jenkins state=restarted
   when: jenkins_init_prefix.changed
